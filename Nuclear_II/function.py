@@ -80,8 +80,72 @@ def Q_alpha(A,Z):
 
 
 
-f = open('massround.mas20.txt','r')
-out = f.readlines() 
+# f = open('massround.mas20.txt','r')
+# out = f.readlines() 
+# line = out[33]
+# elements = []
+# for i in range(len(line)):
+#     # line = out[34]
+#     # print(line[i])
+#     # print(line[i])
+#     if line[i]!=' ':
+#         start = 1
+#         # print(line[i])
+#         if line[i+start]== ' ':
+#             # print('mellemrum')
+#             elements.append(line[i])
+#         elif line[i+start]!=' ':
+#             # print('2 element')
+#             while line[i+start] !=' ':
+#                 start+=1
+#                 print(line[i+start])
+#                 # print('start',start)
+#                 if line[i+start] == ' ':
+#                     stop = start
+#                     elements.append(line[i:i+stop])
+#                     i+=stop
+#                     print('stop',stop)
+#                     break
+                
+#             # if line[i]:
+                
+#             # print(stop)
+#             elements.append(line[i+stop])
 
-for line in out:
-    line
+# line = out[34]  # Assuming you have a list named out, and you want to extract a specific line from it
+# def correct_line_to_str_array(line):
+#     elements = []
+#     i = 0
+#     while i < len(line):
+#         if line[i] != ' ':
+#             start = 1
+#             if i + start < len(line) and line[i + start] == ' ':
+#                 elements.append(line[i])
+#             elif i + start < len(line) and line[i + start] != ' ':
+#                 while i + start < len(line) and line[i + start] != ' ':
+#                     start += 1
+#                 stop = start
+#                 elements.append(line[i:i + stop])
+#                 i += stop
+#         i += 1
+#     elements[-1]=elements[-1].replace('\n','')
+    
+#     return elements
+
+# lines = out[34:60]
+# elements_test = [correct_line_to_str_array(line) for line in lines]
+
+# for i in range(len(lines)):
+#     if len(elements_test[i])==15:
+#         A = elements_test[i][3]
+#     if (len(elements_test[i])!=15 and elements_test[i][0]!='0'):
+#         elements_test[i].insert(0,'0')
+#         elements_test[i].insert(3,A)
+#     # print(elements_test[i][2]=='Li' or 'H')
+#     if elements_test[i][2] == 'Li' or elements_test[i][2] == 'H':
+#         elements_test[i].insert(0,'0')
+#         elements_test[i].insert(3,A)
+#     print(elements_test[i])
+    
+ 
+
