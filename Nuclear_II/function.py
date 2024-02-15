@@ -76,7 +76,7 @@ def Q_alpha(A,Z):
     daughter_B = binding_E(A-4,Z-2)
     heliumm = 28.296
     
-    return mother_B-daughter_B-heliumm
+    return daughter_B+heliumm-mother_B
 
 
 
@@ -113,39 +113,79 @@ def Q_alpha(A,Z):
 #             elements.append(line[i+stop])
 
 # line = out[34]  # Assuming you have a list named out, and you want to extract a specific line from it
-# def correct_line_to_str_array(line):
-#     elements = []
-#     i = 0
-#     while i < len(line):
-#         if line[i] != ' ':
-#             start = 1
-#             if i + start < len(line) and line[i + start] == ' ':
-#                 elements.append(line[i])
-#             elif i + start < len(line) and line[i + start] != ' ':
-#                 while i + start < len(line) and line[i + start] != ' ':
-#                     start += 1
-#                 stop = start
-#                 elements.append(line[i:i + stop])
-#                 i += stop
-#         i += 1
-#     elements[-1]=elements[-1].replace('\n','')
+def correct_line_to_str_array(line):
+    elements = []
+    i = 0
+    while i < len(line):
+        if line[i] != ' ':
+            start = 1
+            if i + start < len(line) and line[i + start] == ' ':
+                elements.append(float(line[i]))
+            elif i + start < len(line) and line[i + start] != ' ':
+                while i + start < len(line) and line[i + start] != ' ':
+                    start += 1
+                stop = start
+                elements.append(float(line[i:i + stop]))
+                i += stop
+        i += 1
+    elements[-1]=elements[-1].replace('\n','')
     
-#     return elements
+    return elements
 
-# lines = out[34:60]
-# elements_test = [correct_line_to_str_array(line) for line in lines]
+def correct_missing_values_in_str(lines):
+    elements_test = [correct_line_to_str_array(line) for line in lines]
 
-# for i in range(len(lines)):
-#     if len(elements_test[i])==15:
-#         A = elements_test[i][3]
-#     if (len(elements_test[i])!=15 and elements_test[i][0]!='0'):
-#         elements_test[i].insert(0,'0')
-#         elements_test[i].insert(3,A)
-#     # print(elements_test[i][2]=='Li' or 'H')
-#     if elements_test[i][2] == 'Li' or elements_test[i][2] == 'H':
-#         elements_test[i].insert(0,'0')
-#         elements_test[i].insert(3,A)
-#     print(elements_test[i])
+    for i in range(len(lines)):
+        if len(elements_test[i])==15:
+            A = elements_test[i][3]
+        if (len(elements_test[i])!=15 and elements_test[i][0]!='0'):
+            elements_test[i].insert(0,'0')
+            A=elements_test[i-1][3]
+            elements_test[i].insert(3,A)
+            # print(elements_test[i][2]=='Li' or 'H')
+        if elements_test[i][2] == 'Li' or elements_test[i][2] == 'H':
+            elements_test[i].insert(0,'0')
+            elements_test[i].insert(3,A)
     
- 
 
+        if len(elements_test[i])<16:
+            if elements_test[i][5][0]!='-a':
+                elements_test[i].insert(5,' ')
+                
+            elif elements_test[i][5][0]!='x':
+                elements_test[i].insert(5,' ')
+                
+            elif elements_test[i][5][0]!='-n':
+                elements_test[i].insert(5,' ')
+            
+
+        if elements_test[i][10]=='*':
+            elements_test[i].insert(11,'NaN')
+            elements_test[i].insert(12,'NaN')
+        
+        # first = float(elements_test[i][-3])
+        # second = float(elements_test[i][-2])
+        # elements_test[i].insert(14,first*1e7+second)
+        # # print(elements_test[i])
+        # print((elements_test[i]))
+        
+        
+    return elements_test
+
+
+# lines = out[34:]
+# elements = correct_missing_values_in_str(lines)
+
+# import pandas as pd
+# cols = ['NZ', 'N',  'Z', 'A' ,   'el','o',    'mass' , 'unc', 'binding', 'unc',     'B' , 'beta',  'unc' ,  'atomic_mass_first', 'atomic_mass_second',   'unc']
+# test = pd.DataFrame((elements),columns=cols)
+# test.open()
+# A30=np.where(test['A']=='30')[0][0]
+# A120=np.where(test['A']=='120')[0][0]
+# As = test[A30:A120]
+# As = As['A'][test['B']=='*']
+# Zs = As['Z'][test['B']=='*']
+
+# import matplotlib.pyplot as plt
+# plt.scatter(As,Zs)
+# plt.show()
