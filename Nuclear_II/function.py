@@ -21,47 +21,6 @@ def binding_E(A,Z):
     return energy
 
 
-def correct_string(line: str, A_before: int) -> (list,int):
-    """""
-    
-    Turns one line of the string into a list with values for all these 'N', 'Z', 'A', 'El', 'Orig', 'Mass Excess (keV)', 'ME Unc',
-       'Binding Energy/A (keV)', 'BE/A Unc', 'Beta-decay Type',
-       'Beta-decay Energy (keV)', 'BE Unc', 'N Protons',
-       'Atomic Mass (micro-u)', 'AM Unc'
-       
-    """""
-    
-    N = int(line[2:9].strip())
-    Z = int(line[10:14].strip())
-    
-    A_test = line[15:19].strip()
-    if A_test ==  "":
-        A = A_before
-    else:
-        A = int(A_test)
-    
-    El = line[20:22].strip()
-    Orig = line[23:27].strip()
-    mass_excess = line[28:41].strip()  # missing convertion for # is str for now
-    mass_excess_unc = line[42:52].strip() # missing convertion for # is str for now
-    b_energya = line[53:63].strip() # missing convertion for # is str for now
-    b_energya_unc = line[63:72].strip() # missing convertion for # is str for now
-    b_type = line[72:75].strip()
-    b_energy = line[75:86].strip() # missing convertion for # and * is str for now
-    b_energy_unc = line[87:95].strip() # missing convertion for # and * is str for now
-    n_protons = int(line[96:99].strip())
-    a_mass = line[99:112].strip() # missing convertion for # and * is str for now
-    am_unc = line[112:].strip() # missing convertion for # and * is str for now
-    
-    output_values = [
-        N, Z, A, El, Orig, mass_excess, mass_excess_unc, b_energya, b_energya_unc,
-        b_type, b_energy, b_energy_unc, n_protons, a_mass, am_unc
-    ]
-    return output_values, A
-
-# def Qa (Ta,A,Z): #A,Z til datterkerne, samt bruges den udgave hvor bindingsenergien for alpha partiklen
-#     return Ta*(binding_E(A,Z)+(2*mp+2*me+2*mn)-28.296)/binding_E(A,Z)
-
 def Q_alpha(A,Z):
     """Alpha emission Q-balue
 
@@ -79,53 +38,32 @@ def Q_alpha(A,Z):
     return daughter_B+heliumm-mother_B
 
 
-
-# f = open('massround.mas20.txt','r')
-# out = f.readlines() 
-# line = out[33]
-# elements = []
-# for i in range(len(line)):
-#     # line = out[34]
-#     # print(line[i])
-#     # print(line[i])
-#     if line[i]!=' ':
-#         start = 1
-#         # print(line[i])
-#         if line[i+start]== ' ':
-#             # print('mellemrum')
-#             elements.append(line[i])
-#         elif line[i+start]!=' ':
-#             # print('2 element')
-#             while line[i+start] !=' ':
-#                 start+=1
-#                 print(line[i+start])
-#                 # print('start',start)
-#                 if line[i+start] == ' ':
-#                     stop = start
-#                     elements.append(line[i:i+stop])
-#                     i+=stop
-#                     print('stop',stop)
-#                     break
-                
-#             # if line[i]:
-                
-#             # print(stop)
-#             elements.append(line[i+stop])
-
-# line = out[34]  # Assuming you have a list named out, and you want to extract a specific line from it
 def correct_line_to_str_array(line):
+    """
+    Converts a string line into an array of individual elements.
+
+    This function takes a string line as input and splits it into individual elements based on spaces. 
+    It handles cases where multiple spaces separate elements and removes any trailing newline character.
+
+    Args:
+        line (str): A string representing a line of data.
+
+    Returns:
+        list: A list of individual elements extracted from the input line.
+    """
+    
     elements = []
     i = 0
     while i < len(line):
         if line[i] != ' ':
             start = 1
             if i + start < len(line) and line[i + start] == ' ':
-                elements.append(float(line[i]))
+                elements.append((line[i]))
             elif i + start < len(line) and line[i + start] != ' ':
                 while i + start < len(line) and line[i + start] != ' ':
                     start += 1
                 stop = start
-                elements.append(float(line[i:i + stop]))
+                elements.append((line[i:i + stop]))
                 i += stop
         i += 1
     elements[-1]=elements[-1].replace('\n','')
@@ -133,6 +71,19 @@ def correct_line_to_str_array(line):
     return elements
 
 def correct_missing_values_in_str(lines):
+    """
+    Corrects missing values and inconsistencies in the list of lines.
+
+    This function processes a list of lines, each representing data, and corrects missing values and inconsistencies
+    based on predefined rules. It utilizes the correct_line_to_str_array function to split each line into individual
+    elements.
+
+    Args:
+        lines (list): A list of strings representing lines of data.
+
+    Returns:
+        list: A list of lists containing corrected elements for each line.
+    """
     elements_test = [correct_line_to_str_array(line) for line in lines]
 
     for i in range(len(lines)):
@@ -171,21 +122,3 @@ def correct_missing_values_in_str(lines):
         
         
     return elements_test
-
-
-# lines = out[34:]
-# elements = correct_missing_values_in_str(lines)
-
-# import pandas as pd
-# cols = ['NZ', 'N',  'Z', 'A' ,   'el','o',    'mass' , 'unc', 'binding', 'unc',     'B' , 'beta',  'unc' ,  'atomic_mass_first', 'atomic_mass_second',   'unc']
-# test = pd.DataFrame((elements),columns=cols)
-# test.open()
-# A30=np.where(test['A']=='30')[0][0]
-# A120=np.where(test['A']=='120')[0][0]
-# As = test[A30:A120]
-# As = As['A'][test['B']=='*']
-# Zs = As['Z'][test['B']=='*']
-
-# import matplotlib.pyplot as plt
-# plt.scatter(As,Zs)
-# plt.show()
